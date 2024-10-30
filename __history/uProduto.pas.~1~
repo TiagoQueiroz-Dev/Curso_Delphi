@@ -1,0 +1,14 @@
+unit uProduto;
+
+interface
+
+type
+  TProduto = class
+    FIDProduto: integer;
+    FNome: string;
+    FPreco: currency;
+  end;
+
+implementation
+
+end.

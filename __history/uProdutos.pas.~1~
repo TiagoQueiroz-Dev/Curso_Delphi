@@ -1,0 +1,27 @@
+unit uProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type
+  TfrmProdutos = class(TForm)
+    btnAdicionar: TButton;
+    btnAlterar: TButton;
+    btnDeletar: TButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmProdutos: TfrmProdutos;
+
+implementation
+
+{$R *.dfm}
+
+end.

@@ -1,0 +1,56 @@
+unit uFrmIncluirProduto;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, uConexao;
+
+type
+  TFrmIncluirProduto = class(TForm)
+    lblID: TLabel;
+    btnCancelar: TBitBtn;
+    edtID: TEdit;
+    btnConfirmar: TBitBtn;
+    lblNome: TLabel;
+    edtNome: TEdit;
+    lblPreco: TLabel;
+    edtPreco: TEdit;
+    lblTitulo: TLabel;
+    procedure btnConfirmarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    class procedure Abrir;
+    procedure IncluirDados;
+  end;
+
+var
+  FrmIncluirProduto: TFrmIncluirProduto;
+
+implementation
+
+{$R *.dfm}
+{ TuFrmIncluirProduto }
+
+class procedure TFrmIncluirProduto.Abrir;
+begin
+  Application.CreateForm(TFrmIncluirProduto, FrmIncluirProduto);
+  FrmIncluirProduto.ShowModal;
+end;
+
+procedure TFrmIncluirProduto.btnConfirmarClick(Sender: TObject);
+begin
+  IncluirDados;
+end;
+
+procedure TFrmIncluirProduto.IncluirDados;
+
+begin
+  DMconexao.InclusaoBanco({edtID.Text,}edtNome.Text,edtPreco.Text);
+  Close;
+end;
+
+end.

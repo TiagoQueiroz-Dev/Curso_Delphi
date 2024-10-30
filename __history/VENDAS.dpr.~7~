@@ -1,0 +1,23 @@
+program VENDAS;
+
+uses
+  Vcl.Forms,
+  uFrmPrincipal in 'uFrmPrincipal.pas' {frmPrincipal},
+  uFrmProdutos in 'uFrmProdutos.pas' {frmProdutos},
+  uProduto in 'uProduto.pas',
+  uConexao in 'uConexao.pas' {DMconexao: TDataModule},
+  uFrmIncluirProduto in 'uFrmIncluirProduto.pas' {FrmIncluirProduto};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  ReportMemoryLeaksOnShutdown := DebugHook <> 0;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
+  Application.CreateForm(TfrmProdutos, frmProdutos);
+  Application.CreateForm(TDMconexao, DMconexao);
+  Application.CreateForm(TFrmIncluirProduto, FrmIncluirProduto);
+  Application.Run;
+
+end.

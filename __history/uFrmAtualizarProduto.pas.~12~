@@ -1,0 +1,64 @@
+unit uFrmAtualizarProduto;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, uProduto, uConexao;
+
+type
+  TFrmAtualizarProduto = class(TForm)
+    btnCancelar: TButton;
+    btnConfirmar: TButton;
+    lblNome: TLabel;
+    edtNome: TEdit;
+    lblPreco: TLabel;
+    edtPreco: TEdit;
+    lblTitulo: TLabel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure Abrir(IdProduto: integer);
+    procedure CarregarProdAtualiza(Id: integer);
+
+  end;
+
+var
+  FrmAtualizarProduto: TFrmAtualizarProduto;
+
+implementation
+
+{$R *.dfm}
+{ TFrmAtualizarProduto }
+
+procedure TFrmAtualizarProduto.Abrir(IdProduto: integer);
+begin
+  if not Assigned(FrmAtualizarProduto) then
+    Application.CreateForm(TFrmAtualizarProduto, FrmAtualizarProduto);
+  try
+    CarregarProdAtualiza(IdProduto);
+    FrmAtualizarProduto.ShowModal;
+  finally
+    FreeAndNil(FrmAtualizarProduto);
+  end;
+end;
+
+procedure TFrmAtualizarProduto.CarregarProdAtualiza(Id: integer);
+var
+  Produto: TProduto;
+begin
+  with DMconexao.FDQuery1 do
+  begin
+    SQL.Clear;
+    SQL.Add('SELECT id,nome,preco FROM produtos WHERE id = ' + IntToStr(Id));
+    Open;
+    edtNome.Text := FieldByName('nome').AsString;
+    edtPreco.Text := currtostr(FieldByName('preco').AsCurrency);
+    Close;
+  end;
+  DMconexao.CarregarGrid;
+end;
+
+end.

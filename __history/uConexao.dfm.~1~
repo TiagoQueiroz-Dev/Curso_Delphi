@@ -1,0 +1,8 @@
+object DMconexao: TDMconexao
+  Height = 480
+  Width = 640
+  object FDConnection1: TFDConnection
+    Left = 112
+    Top = 136
+  end
+end

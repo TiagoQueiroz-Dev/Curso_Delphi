@@ -1,0 +1,45 @@
+unit uFrmAtualizarProduto;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, uProduto, uConexao;
+
+type
+  TFrmAtualizarProduto = class(TForm)
+    btnCancelar: TButton;
+    btnConfirmar: TButton;
+    lblNome: TLabel;
+    edtNome: TEdit;
+    lblPreco: TLabel;
+    edtPreco: TEdit;
+    lblTitulo: TLabel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure Abrir;
+
+  end;
+
+var
+  FrmAtualizarProduto: TFrmAtualizarProduto;
+  Fproduto: TProduto;
+
+implementation
+
+{$R *.dfm}
+{ TFrmAtualizarProduto }
+
+procedure TFrmAtualizarProduto.Abrir;
+begin
+  Application.CreateForm(TFrmAtualizarProduto, FrmAtualizarProduto);
+  try
+    FrmAtualizarProduto.ShowModal;
+  finally
+  end;
+end;
+
+end.

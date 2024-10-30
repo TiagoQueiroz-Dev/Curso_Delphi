@@ -1,0 +1,71 @@
+unit uFrmProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, uConexao, Data.DB,
+  Vcl.Grids, Vcl.DBGrids, uFrmIncluirProduto, uFrmAtualizarProduto,uProduto;
+
+type
+  TfrmProdutos = class(TForm)
+    btnAdicionar: TButton;
+    btnAlterar: TButton;
+    btnDeletar: TButton;
+    DBGrid1: TDBGrid;
+    DataSource1: TDataSource;
+    procedure btnAdicionarClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+  private
+  var
+    Fteste:  TProduto;
+    { functions }
+    { procedures }
+  public
+    { class procedures }
+    class procedure Abrir;
+  end;
+
+var
+  frmProdutos: TfrmProdutos;
+
+implementation
+
+{$R *.dfm}
+{ TfrmProdutos }
+
+class procedure TfrmProdutos.Abrir;
+begin
+  if not Assigned(frmProdutos) then
+    Application.CreateForm(TfrmProdutos, frmProdutos);
+  with frmProdutos do
+    try
+      // Chamei o formulario
+      ShowModal;
+    finally
+      FreeAndNil(frmProdutos);
+    end;
+end;
+
+procedure TfrmProdutos.btnAdicionarClick(Sender: TObject);
+begin
+  FrmIncluirProduto.Abrir;
+end;
+
+procedure TfrmProdutos.btnAlterarClick(Sender: TObject);
+begin
+  // ShowMessage(inttostr(DMconexao.FDQuery1.FieldByName('id').Value) + ' ' + DMconexao.FDQuery1.FieldByName('nome').value + ' ' + inttostr(DMconexao.FDQuery1.FieldByName('preco').value));
+  // FrmAtualizarProduto.CarregarProduto;
+  FrmAtualizarProduto.Abrir(Fteste);
+  //ShowMessage(inttostr(Fteste)); (IdProduto: integer)
+
+end;
+
+procedure TfrmProdutos.DBGrid1CellClick(Column: TColumn);
+begin
+  Fteste := DMconexao.Puxardados;
+end;
+
+end.
