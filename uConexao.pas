@@ -28,7 +28,7 @@ type
     procedure CarregarGrid();
     function PegarIDProduto: integer;
     procedure Deletar(id: integer);
-    function PesquisaProduto(id: integer; nome: string): TProduto;
+    function PesquisaProduto(id: string; nome: string): TProduto;
   end;
 
 var
@@ -91,7 +91,7 @@ begin
   result := FDQuery1.FieldByName('id').Value;
 end;
 
-function TDMconexao.PesquisaProduto(id: integer; nome: string): TProduto;
+function TDMconexao.PesquisaProduto(id: string; nome: string): TProduto;
 var
   vProduto: TProduto;
 begin
@@ -101,7 +101,7 @@ begin
     Close;
     sql.Clear;
     sql.Add('select * from PRODUTOS where id = :id or nome like upper(:nome)');
-    ParamByName('id').AsInteger := id;
+    ParamByName('id').Asstring := id;
     ParamByName('nome').AsString := nome;
     Open;
     vProduto.IDProduto := FieldByName('id').AsInteger;

@@ -1,0 +1,111 @@
+unit uFrmNovaVenda;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.Imaging.pngimage, Vcl.ExtCtrls, uFrmIncluirProduto, uConexao,
+  uProduto;
+
+type
+  TFrmNovaVenda = class(TForm)
+    lblNumeroVenda: TLabel;
+    edtID: TEdit;
+    edtNome: TEdit;
+    edtQuantidade: TEdit;
+    lblValorTotalProduto: TLabel;
+    gridVendaProd: TDBGrid;
+    btnIncluir: TButton;
+    imgPesquisar: TImage;
+    btnCancelar: TButton;
+    btnConfirmar: TButton;
+    lblValorToatalVenda: TLabel;
+    procedure edtIDExit(Sender: TObject);
+    procedure edtIDKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure edtQuantidadeExit(Sender: TObject);
+  private
+    FInfoProduto: TProduto;
+    { Private declarations }
+  public
+    { Public declarations }
+    class procedure Abrir;
+    procedure AtribuirInfoProduto(id: string; nome: string);
+    procedure ZerarCampos;
+  end;
+
+var
+  FrmNovaVenda: TFrmNovaVenda;
+
+implementation
+
+{$R *.dfm}
+{ TFrmNovaVenda }
+
+class procedure TFrmNovaVenda.Abrir;
+begin
+  if not Assigned(FrmNovaVenda) then
+    Application.CreateForm(TFrmNovaVenda, FrmNovaVenda);
+  try
+    FrmNovaVenda.ShowModal;
+  finally
+    // FreeAndNil(FrmNovaVenda);
+    FrmNovaVenda.ZerarCampos;
+  end;
+
+end;
+
+procedure TFrmNovaVenda.AtribuirInfoProduto(id: string; nome: string);
+begin
+  FInfoProduto := DMconexao.PesquisaProduto(id, nome);
+end;
+
+procedure TFrmNovaVenda.edtIDExit(Sender: TObject);
+begin
+  if Trim(edtID.Text) <> '' then
+  begin
+    try
+      AtribuirInfoProduto(edtID.Text, '');
+      if FInfoProduto.IDProduto <> 0 then
+      begin
+        edtNome.Text := FInfoProduto.nome;
+        edtQuantidade.Text := '1';
+        edtQuantidadeExit(nil);
+        edtQuantidade.SetFocus;
+      end
+      else
+      begin
+        ShowMessage('abre a tela de pesquisa (ainda não existe)');
+        ZerarCampos;
+      end;
+    finally
+      // FreeAndNil(FInfoProduto);
+    end;
+
+  end;
+
+end;
+
+procedure TFrmNovaVenda.edtIDKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    perform(WM_NEXTDLGCTL, 0, 0);
+end;
+
+procedure TFrmNovaVenda.edtQuantidadeExit(Sender: TObject);
+begin
+  lblValorTotalProduto.Caption := 'Valor total: ' +
+    currtostr(FInfoProduto.Preco * strtoint(edtQuantidade.Text));
+end;
+
+procedure TFrmNovaVenda.ZerarCampos;
+begin
+  edtID.Text := '';
+  edtNome.Text := '';
+  edtQuantidade.Text := '1';
+  lblValorTotalProduto.Caption := 'Valor total:';
+end;
+
+end.

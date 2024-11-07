@@ -84,6 +84,7 @@ object FrmNovaVenda: TFrmNovaVenda
     Height = 23
     TabOrder = 0
     OnExit = edtIDExit
+    OnKeyDown = edtIDKeyDown
   end
   object edtNome: TEdit
     Left = 103
@@ -99,14 +100,15 @@ object FrmNovaVenda: TFrmNovaVenda
     Width = 65
     Height = 23
     TabOrder = 2
-    OnChange = edtQuantidadeChange
+    Text = '1'
+    OnExit = edtQuantidadeExit
   end
   object gridVendaProd: TDBGrid
     Left = 23
     Top = 128
     Width = 588
     Height = 161
-    TabOrder = 3
+    TabOrder = 6
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -12
@@ -119,7 +121,8 @@ object FrmNovaVenda: TFrmNovaVenda
     Width = 75
     Height = 25
     Caption = 'Incluir'
-    TabOrder = 4
+    TabOrder = 3
+    OnClick = btnIncluirClick
   end
   object btnCancelar: TButton
     Left = 440
@@ -135,6 +138,6 @@ object FrmNovaVenda: TFrmNovaVenda
     Width = 75
     Height = 25
     Caption = 'Confirmar'
-    TabOrder = 6
+    TabOrder = 4
   end
 end

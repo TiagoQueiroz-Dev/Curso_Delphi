@@ -23,13 +23,18 @@ type
     btnConfirmar: TButton;
     lblValorToatalVenda: TLabel;
     procedure edtIDExit(Sender: TObject);
+    procedure edtIDKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure edtQuantidadeExit(Sender: TObject);
+    procedure btnIncluirClick(Sender: TObject);
     procedure edtNomeExit(Sender: TObject);
-    procedure edtQuantidadeChange(Sender: TObject);
   private
+    FInfoProduto: TProduto;
     { Private declarations }
   public
     { Public declarations }
     class procedure Abrir;
+    procedure AtribuirInfoProduto(id: string; nome: string);
+    procedure ZerarCampos;
   end;
 
 var
@@ -48,81 +53,90 @@ begin
     FrmNovaVenda.ShowModal;
   finally
     // FreeAndNil(FrmNovaVenda);
-    FrmNovaVenda.edtID.Text := '';
-    FrmNovaVenda.edtNome.Text := '';
+    FrmNovaVenda.ZerarCampos;
   end;
 
 end;
 
-procedure TFrmNovaVenda.edtIDExit(Sender: TObject);
-var
-  vProduto: TProduto;
+procedure TFrmNovaVenda.AtribuirInfoProduto(id: string; nome: string);
 begin
+  // colocar um if para se tiver criado ele dar um free and nill para gerar outro objeto
+  if Assigned(FInfoProduto) then
+    FreeAndNil(FInfoProduto);
+  FInfoProduto := DMconexao.PesquisaProduto(id, nome);
+end;
 
-  if edtID.Text <> '' then
+procedure TFrmNovaVenda.btnIncluirClick(Sender: TObject);
+begin
+  FreeAndNil(FInfoProduto);
+  ShowMessage('liberado');
+end;
+
+procedure TFrmNovaVenda.edtIDExit(Sender: TObject);
+begin
+  if Trim(edtID.Text) <> '' then
   begin
-    vProduto := DMconexao.PesquisaProduto(strtoint(edtID.Text), '');
-    if vProduto.IDProduto <> 0 then
+    AtribuirInfoProduto(edtID.Text, '');
+    if FInfoProduto.IDProduto <> 0 then
     begin
-      try
-        edtID.Text := inttostr(vProduto.IDProduto);
-        edtNome.Text := vProduto.Nome;
-        lblValorTotalProduto.Caption := CurrToStr(vProduto.Preco);
-      finally
-        FreeAndNil(vProduto);
-      end;
+      edtNome.Text := FInfoProduto.nome;
+      edtID.Text := inttostr(FInfoProduto.IDProduto);
+      edtQuantidade.Text := '1';
+      edtQuantidadeExit(nil);
+      edtQuantidade.SetFocus;
     end
     else
     begin
-      try
-        ShowMessage('Não existe produto com este ID');
-      finally
-        FreeAndNil(vProduto);
-        FrmNovaVenda.edtID.Text := '';
-        FrmNovaVenda.edtNome.Text := '';
-        lblValorTotalProduto.Caption := 'Valor Total: ';
-      end;
+      ShowMessage('abre a tela de pesquisa (ainda não existe)');
+      ZerarCampos;
+      edtID.SetFocus;
     end;
-  end
-  else
+
+  end;
+
+end;
+
+procedure TFrmNovaVenda.edtIDKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    perform(WM_NEXTDLGCTL, 0, 0);
 end;
 
 procedure TFrmNovaVenda.edtNomeExit(Sender: TObject);
-var
-  vProduto: TProduto;
 begin
-
-  if edtNome.Text <> '' then
+  if Trim(edtNome.Text) <> '' then
   begin
-    vProduto := DMconexao.PesquisaProduto(-1, edtNome.Text);
-    if vProduto.Nome <> '' then
+    AtribuirInfoProduto('0', edtNome.Text);
+    if FInfoProduto.Nome <> '' then
     begin
-      try
-        edtID.Text := inttostr(vProduto.IDProduto);
-        edtNome.Text := vProduto.Nome;
-        lblValorTotalProduto.Caption := CurrToStr(vProduto.Preco);
-      finally
-        FreeAndNil(vProduto);
-      end;
+      edtNome.Text := FInfoProduto.nome;
+      edtID.Text := inttostr(FInfoProduto.IDProduto);
+      edtQuantidade.Text := '1';
+      edtQuantidadeExit(nil);
+      edtQuantidade.SetFocus;
     end
     else
     begin
-      try
-        ShowMessage('Não existe produto com este Nome');
-      finally
-        FreeAndNil(vProduto);
-        FrmNovaVenda.edtID.Text := '';
-        FrmNovaVenda.edtNome.Text := '';
-        lblValorTotalProduto.Caption := 'Valor Total: ';
-      end;
+      ShowMessage('abre a tela de pesquisa (ainda não existe)');
+      ZerarCampos;
+      edtNome.SetFocus;
     end;
-  end
-  else
+  end;
 end;
 
-procedure TFrmNovaVenda.edtQuantidadeChange(Sender: TObject);
+procedure TFrmNovaVenda.edtQuantidadeExit(Sender: TObject);
 begin
-    lblValorTotalProduto.Caption := currtostr(strtocurr(lblValorTotalProduto.Caption) * strtocurr(edtQuantidade.Text));
+  lblValorTotalProduto.Caption := 'Valor total: ' +
+    currtostr(FInfoProduto.Preco * strtoint(edtQuantidade.Text));
+end;
+
+procedure TFrmNovaVenda.ZerarCampos;
+begin
+  edtID.Text := '';
+  edtNome.Text := '';
+  edtQuantidade.Text := '1';
+  lblValorTotalProduto.Caption := 'Valor total:';
 end;
 
 end.

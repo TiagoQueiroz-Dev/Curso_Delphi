@@ -45,7 +45,7 @@ begin
     Application.CreateForm(TfrmProdutos, frmProdutos);
   with frmProdutos do
     try
-      // Chamei o formulario
+      DMconexao.CarregarGrid;
       ShowModal;
     finally
       FreeAndNil(frmProdutos);
